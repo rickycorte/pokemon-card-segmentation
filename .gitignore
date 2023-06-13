@@ -1,0 +1,11 @@
+.vscode
+__pycache__
+
+lightning_logs/
+
+data/*
+!data/place_datasets_here
+
+checkpoints/
+
+output/*
