@@ -7,7 +7,7 @@ from torchvision import transforms
 import settings
 from datasets import PkmCardSegmentationDataModule
 
-from models import SimoidSegmentationModule, UNetBaseline
+from models import SimoidSegmentationModule, UnetTimm
 
 
 # data agumentation
@@ -25,7 +25,13 @@ datamodule = PkmCardSegmentationDataModule(
     use_noisy=settings.use_noisy_labels
 )
 
-torch_model = UNetBaseline(in_depth=settings.input_channels, out_depth=1, depth_scale=settings.baseline_model_scale)
+# replace this line with the model you want to train
+torch_model = UnetTimm(
+    out_depth=1,
+    backbone_name="efficientnet_b3",
+    pretrained=True,
+    decoder_scale=settings.timmunet_decoder_scale
+)
 
 
 model = SimoidSegmentationModule(torch_model, lr=settings.learn_rate)

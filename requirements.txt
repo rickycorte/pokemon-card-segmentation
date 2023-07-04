@@ -5,3 +5,4 @@ opencv-python-headless==4.7.0.72
 pillow==9.5.0
 tqdm>=4.64.0
 torchvision==0.15.2
+timm==0.9.2

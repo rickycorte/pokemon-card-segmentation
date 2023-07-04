@@ -12,13 +12,26 @@ from torchvision.utils import save_image
 from tqdm import tqdm
 
 import settings
-from models import UNetBaseline
+from models import UNetBaseline, UnetTimm
+
+available_models = {
+    "baseline": {
+        "model": UNetBaseline(in_depth=settings.input_channels, out_depth=1, depth_scale=settings.baseline_model_scale),
+        "checkpoint": settings.baseline_checkpoint_path
+    },
+    "tunet": {
+        "model": UnetTimm(out_depth=1, backbone_name="efficientnet_b3", pretrained=False, decoder_scale=settings.timmunet_decoder_scale),
+        "checkpoint": settings.timmunet_checkpoint_path
+    }
+
+}
 
 # command line args
 parser = argparse.ArgumentParser(description='Segment pokemon cards')
 
 parser.add_argument("-file", dest="file", help="Input image", type=str, default=None)
 parser.add_argument("-folder", dest="folder", help="Folder where images (pngs or jpgs) are located", type=str, default=None)
+parser.add_argument("-model", dest="model", help=f"Model name {available_models.keys()}", type=str, default="tunet")
 
 args = parser.parse_args()
 
@@ -49,11 +62,16 @@ if args.folder is not None:
         if ".png" in f or ".jpg" in f:
             files.append(os.path.join(args.folder, f))
         
+if args.model not in available_models.keys():
+    print(f"No model named: {args.file}. Available models: {available_models.keys()}")
+    exit(1)
+
+print(f"Using model: {args.model}")
 
 # load model
-model = UNetBaseline(in_depth=settings.input_channels, out_depth=1, depth_scale=settings.baseline_model_scale)
+model = available_models[args.model]["model"]
 
-checkpoint = torch.load(settings.checkpoint_path)
+checkpoint = torch.load(available_models[args.model]["checkpoint"])
 weights = checkpoint["state_dict"]
 for key in list(weights):
     weights[key.replace("model.", "")] = weights.pop(key)

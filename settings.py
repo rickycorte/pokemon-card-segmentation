@@ -10,7 +10,7 @@ raw_dataset_folder = "data/raw"
 output_root = "output"
 
 # global settings
-card_size = (512, 368)
+card_size = (512, 352)
 
 # data preprocessing settings
 min_mask_occupaion_percent = 0.20
@@ -30,11 +30,13 @@ batch_size = 16
 max_epochs = 150
 input_channels = 3
 use_noisy_labels = False
-learn_rate =  1e-3  
+learn_rate =  1e-4  
 baseline_model_scale = 2
+timmunet_decoder_scale = 1
 
 # prediction settings
-checkpoint_path = "checkpoints/baseline_150.ckpt"
+baseline_checkpoint_path = "checkpoints/baseline_150.ckpt"
+timmunet_checkpoint_path = "checkpoints/timmunet_eff3_0819.ckpt"
 
 ################################################################################
 
